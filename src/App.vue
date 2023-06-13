@@ -1,8 +1,27 @@
+<script lang="ts" setup>
+import {Command, onUserInput, useCommandEvent, useDebouncedRef} from "@fzdwx/launcher-api";
+import {watch} from "vue";
+
+let commandEvent = useCommandEvent();
+
+const debouncedUserInput = useDebouncedRef('', 500);
+onUserInput('github-repository-search', (s) => {
+  commandEvent.emitter.emit('setInputValue', s)
+  debouncedUserInput.value = s;
+})
+
+watch(debouncedUserInput, (value) => {
+  console.log(value)
+})
+</script>
+
 <template>
   <div class="body dark">
     <Command.Dialog :visible="true" theme="raycast">
       <template #header>
-        <Command.Input placeholder="Type a command or search..." />
+        <div class="hidden">
+          <Command.Input/>
+        </div>
       </template>
       <template #body>
         <Command.List>
@@ -11,7 +30,7 @@
           <Command.Group heading="Letters">
             <Command.Item data-value="a">a</Command.Item>
             <Command.Item data-value="b">b</Command.Item>
-            <Command.Separator />
+            <Command.Separator/>
             <Command.Item data-value="c">c</Command.Item>
           </Command.Group>
 
@@ -21,38 +40,6 @@
     </Command.Dialog>
   </div>
 </template>
-<script lang="ts" setup>
-import {onMounted, ref} from "vue";
-
-import {Command, exit, getClipText} from "@fzdwx/launcher-api";
-
-window.onkeydown = (e: KeyboardEvent) => {
-
-  if (e.code === "Escape") {
-    goBack()
-    return
-  }
-}
-
-const text = ref('')
-const inputRel = ref<HTMLInputElement>()
-const inputValue = ref('')
-
-
-onMounted(() => {
-  inputRel.value?.focus()
-})
-
-const goBack = () => {
-  exit()
-}
-
-const read = () => {
-  getClipText((s) => {
-    text.value = s
-  })
-}
-</script>
 
 <style>
 </style>

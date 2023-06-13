@@ -1,8 +1,6 @@
-# launcher extension sample
+# launcher github extension 
 
 ```shell
 $ pnpm install
 $ pnpm run build
 ```
-
-is https://github.com/fzdwx/launcher extension sample 

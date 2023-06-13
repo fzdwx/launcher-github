@@ -1,5 +1,13 @@
 <script lang="ts" setup>
-import {changeInputState, Command, getConfig, onUserInput, useCommandEvent, useDebouncedRef} from "@fzdwx/launcher-api";
+import {
+  changeInputState,
+  Command,
+  getConfig,
+  onUserInput,
+  openUrl,
+  useCommandEvent,
+  useDebouncedRef
+} from "@fzdwx/launcher-api";
 import {onMounted, ref, watch} from "vue";
 import {useRepositories} from "@/use/useRepositories";
 
@@ -50,9 +58,12 @@ watch(response, () => {
           <Command.Empty>Type to search repo.</Command.Empty>
           <Command.Group v-if="response" heading="">
             <Command.Item v-for="item in response.items"
+                          @select="()=>{
+                            openUrl(item.html_url)
+                          }"
                           :data-value="item.name">
               <img :src="item.owner.avatar_url" alt="owner avater" class="w-6 h-6 mr-2"/>
-              {{ item.owner.login }}/{{ item.name }}
+              {{ item.full_name }}
             </Command.Item>
           </Command.Group>
 

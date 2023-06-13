@@ -2,6 +2,7 @@ export interface Repository {
     id: string;
     url: string;
     name: string;
+    full_name: string;
     updated_at: string;
     pushed_at: string;
     created_at: string;

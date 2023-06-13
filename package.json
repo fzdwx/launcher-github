@@ -1,6 +1,6 @@
 {
   "name": "launcher-github-repository-search",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "dev": "vite",
     "build": "run-p build-only",
@@ -9,6 +9,7 @@
     "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false"
   },
   "dependencies": {
+    "javascript-time-ago": "^2.5.9",
     "sass": "^1.63.3",
     "vue": "^3.3.4"
   },

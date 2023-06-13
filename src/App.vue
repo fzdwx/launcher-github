@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import {Command, onUserInput, useCommandEvent, useDebouncedRef} from "@fzdwx/launcher-api";
-import {watch} from "vue";
+import {changeInputState, Command, getConfig, onUserInput, useCommandEvent, useDebouncedRef} from "@fzdwx/launcher-api";
+import {onMounted, ref, watch} from "vue";
+import {useRepositories} from "@/use/useRepositories";
 
 let commandEvent = useCommandEvent();
 
@@ -13,6 +14,27 @@ onUserInput('github-repository-search', (s) => {
 watch(debouncedUserInput, (value) => {
   console.log(value)
 })
+
+const config = getConfig();
+const {response, loading} = useRepositories(debouncedUserInput, config.value['gh-token']);
+
+watch(config, async () => {
+})
+onMounted(() => {
+  changeInputState({
+    disableFilter: true
+  })
+})
+
+watch(loading, () => {
+  changeInputState({
+    loading: loading.value
+  })
+})
+
+watch(response, () => {
+  console.log(response.value?.items)
+})
 </script>
 
 <template>
@@ -20,21 +42,20 @@ watch(debouncedUserInput, (value) => {
     <Command.Dialog :visible="true" theme="raycast">
       <template #header>
         <div class="hidden">
-          <Command.Input/>
+          <Command.Input disable-filter/>
         </div>
       </template>
       <template #body>
         <Command.List>
-          <Command.Empty>No results found.</Command.Empty>
-
-          <Command.Group heading="Letters">
-            <Command.Item data-value="a">a</Command.Item>
-            <Command.Item data-value="b">b</Command.Item>
-            <Command.Separator/>
-            <Command.Item data-value="c">c</Command.Item>
+          <Command.Empty>Type to search repo.</Command.Empty>
+          <Command.Group v-if="response" heading="">
+            <Command.Item v-for="item in response.items"
+                          :data-value="item.name">
+              <img :src="item.owner.avatar_url" alt="owner avater" class="w-6 h-6 mr-2"/>
+              {{ item.owner.login }}/{{ item.name }}
+            </Command.Item>
           </Command.Group>
 
-          <Command.Item data-value="apple">Apple</Command.Item>
         </Command.List>
       </template>
     </Command.Dialog>

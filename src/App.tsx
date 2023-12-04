@@ -5,7 +5,7 @@ import {
     getRepo
 } from './useRepo';
 import {useRequest} from 'ahooks';
-import {formatDate} from "./date.ts";
+import {formatDate} from "./date";
 
 const numberFormatter = new Intl.NumberFormat("en-US", {notation: "compact", compactDisplay: "short"});
 const App = () => {
